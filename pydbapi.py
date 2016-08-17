@@ -2,7 +2,7 @@
 '''
     Some wappers for python [synchronous] database operation
     
-    Tested with PyMysql
+    Tested with PyMysql. NEED MORE TEST.
 '''
 
 import sys
@@ -58,11 +58,9 @@ Simple ORM interaction api wrapper
 def insert(txn, tableName, dataDict):
     keys = dataDict.keys()
     values = dataDict.values()
-    bindParam = ",".join( [ "%s"  for i in len(keys) ] )
+    bindParam = ",".join( [ "%s"  for i in keys ] )
     fields = ",".join( [ i for i in keys ] )
-    sql = "insert into {TABLENAME}(FIELDS) values({BIND_PARAM})".format(TABLENAME=tableName, FIELDS=fields, BIND_PARAM = bindParam )
+    sql = "insert into {TABLENAME}({FIELDS}) values({BIND_PARAM})".format(TABLENAME=tableName, FIELDS=fields, BIND_PARAM = bindParam )
     return txn.execute(sql, tuple(values))
-
-
 
 
