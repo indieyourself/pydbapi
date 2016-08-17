@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-     Some wappers for python synchronous database operation
+    Some wappers for python [synchronous] database operation
     
     Tested with PyMysql
 '''
@@ -9,7 +9,8 @@ import sys
 
 def runInteraction(conn, interaction, *args):
     """
-    A logic execution unit wapper with transaction support naturally
+    A logic execution unit wapper with transaction support naturally. 
+    Condition: 1. autocommit: off .
     
     Example:
         def interaction( txn, name, age):
@@ -50,5 +51,18 @@ def getModifiedSql(conn, sql, *args):
     Get escaped sql
     """
     return conn.cursor().mogrify(sql, *args)
+
+"""
+Simple ORM interaction api wrapper
+"""
+def insert(txn, tableName, dataDict):
+    keys = dataDict.keys()
+    values = dataDict.values()
+    bindParam = ",".join( [ "%s"  for i in len(keys) ] )
+    fields = ",".join( [ i for i in keys ] )
+    sql = "insert into {TABLENAME}(FIELDS) values({BIND_PARAM})".format(TABLENAME=tableName, FIELDS=fields, BIND_PARAM = bindParam )
+    return txn.execute(sql, tuple(values))
+
+
 
 
