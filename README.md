@@ -1,2 +1,2 @@
 # pydbapi
-Some wappers for python synchronous database operation
+Some wappers for python [synchronous] database operation
