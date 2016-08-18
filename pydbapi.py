@@ -71,13 +71,19 @@ def select(txn, tableName, fields=[ "*"], wheres={"1":"1"}):
     
     sql = "select {FIELDS} from {TABLENAME} where {CONDITION}".\
     format(FIELDS=fieldParam, TABLENAME=tableName, CONDITION=whereParam)
-    return txn.execute(sql, tuple(wheres.values()))
+    txn.execute(sql, tuple(wheres.values()))
+    return txn.fetchall()
 
 def update(txn, tableName, dataDict, wheres):
-    pass
-
+    fieldParam = ",".join( [ "{KEY}=%s".format(KEY=key) for key in dataDict.keys()] )
+    whereParam = " and ".join( [ "{KEY}=%s".format(KEY=key) for key in wheres.keys() ] )
+    
+    sql = "update {TABLENAME} set {FIELDS} where {CONDITION}".\
+    format(FIELDS=fieldParam, TABLENAME=tableName, CONDITION=whereParam)
+    return txn.execute(sql, tuple( dataDict.values() + wheres.values() ) )
+    
 def delete(txn, tableName, wheres):
-    pass
-
-
+    whereParam = " and ".join( [ "{KEY}=%s".format(KEY=key) for key in wheres.keys() ] )
+    sql = "delete from {TABLENAME} where {CONDITION}".format(TABLENAME=tableName, CONDITION=whereParam)
+    return txn.execute(sql, tuple(wheres.values()))
 
