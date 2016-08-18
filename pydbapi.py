@@ -60,13 +60,17 @@ def insert(txn, tableName, dataDict):
     values = dataDict.values()
     bindParam = ",".join( [ "%s"  for _ in keys ] )
     fields = ",".join( [ i for i in keys ] )
-    sql = "insert into {TABLENAME}({FIELDS}) values({BIND_PARAM})".format(TABLENAME=tableName, FIELDS=fields, BIND_PARAM = bindParam )
+    
+    sql = "insert into {TABLENAME}({FIELDS}) values({BIND_PARAM})".\
+    format(TABLENAME=tableName, FIELDS=fields, BIND_PARAM = bindParam )
     return txn.execute(sql, tuple(values))
 
 def select(txn, tableName, fields=[ "*"], wheres={"1":"1"}):
     fieldParam = ",".join(fields )
     whereParam = " and ".join( [ "{KEY}=%s".format(KEY=key) for key in wheres.keys() ] )
-    sql = "select {FIELDS} from {TABLENAME} where {CONDITION}".format(FIELDS=fieldParam, TABLENAME=tableName, CONDITION=whereParam)
+    
+    sql = "select {FIELDS} from {TABLENAME} where {CONDITION}".\
+    format(FIELDS=fieldParam, TABLENAME=tableName, CONDITION=whereParam)
     return txn.execute(sql, tuple(wheres.values()))
 
 def update(txn, tableName, dataDict, wheres):
